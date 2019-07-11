@@ -41,7 +41,7 @@
             x:Name="result" 
             FontSize="24" 
             FontAttributes="Bold"
-            Text="100.000.000"
+            Text=""
             TextColor="Gray"
             HorizontalTextAlignment="End"
             VerticalTextAlignment="Center"
@@ -52,7 +52,7 @@
             x:Name="input" 
             FontSize="48" 
             FontAttributes="Bold"
-            Text="100.000.000"
+            Text="0"
             TextColor="White"
             HorizontalTextAlignment="End"
             VerticalTextAlignment="Center"
@@ -83,7 +83,7 @@
         <Button Style="{StaticResource operator}" Grid.Row="6" Grid.Column="0" Text="±" Clicked="OnOperatorSelected"/>
         <Button Style="{StaticResource numpad}" Grid.Row="6" Grid.Column="1" Text="0" Clicked="OnNumberSelected"/>
         <Button Style="{StaticResource operator}" Grid.Row="6" Grid.Column="2" Text="," Clicked="OnOperatorSelected"/>
-        <Button Style="{StaticResource operator}" Grid.Row="6" Grid.Column="3" Text="=" Clicked="OnOperatorSelected"/>
+        <Button Style="{StaticResource operator}" Grid.Row="6" Grid.Column="3" Text="=" Clicked="OnCalculateSolution"/>
     </Grid>
 
 </ContentPage>
