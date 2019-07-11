@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="Calculator.MainPage">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="numpad" TargetType="Button">
+                <Setter Property="FontSize" Value="36" />
+                <Setter Property="BackgroundColor" Value="DarkGray" />
+            </Style>
+            <Style x:Key="operator" TargetType="Button">
+                <Setter Property="FontSize" Value="36" />
+                <Setter Property="BackgroundColor" Value="DimGray" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    
+    <Grid BackgroundColor="Black">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.5*" />
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Label 
+            x:Name="result" 
+            FontSize="24" 
+            FontAttributes="Bold"
+            Text="100.000.000"
+            TextColor="Gray"
+            HorizontalTextAlignment="End"
+            VerticalTextAlignment="Center"
+            LineBreakMode="NoWrap"
+            Grid.ColumnSpan="4"/>
+
+        <Label 
+            x:Name="input" 
+            FontSize="48" 
+            FontAttributes="Bold"
+            Text="100.000.000"
+            TextColor="White"
+            HorizontalTextAlignment="End"
+            VerticalTextAlignment="Center"
+            LineBreakMode="NoWrap"
+            Grid.ColumnSpan="4"
+            Grid.Row="1"/>
+
+        <Button Style="{StaticResource operator}" Grid.Row="2" Grid.Column="0" Text="CE" Clicked="OnClearComplete"/>
+        <Button Style="{StaticResource operator}" Grid.Row="2" Grid.Column="1" Text="C" Clicked="OnClearInput"/>
+        <Button Style="{StaticResource operator}" Grid.Row="2" Grid.Column="2" Text="DEL" Clicked="OnDelete"/>
+        <Button Style="{StaticResource operator}" Grid.Row="2" Grid.Column="3" Text="/" Clicked="OnOperatorSelected"/>
+
+        <Button Style="{StaticResource numpad}" Grid.Row="3" Grid.Column="0" Text="7" Clicked="OnNumberSelected"/>
+        <Button Style="{StaticResource numpad}" Grid.Row="3" Grid.Column="1" Text="8" Clicked="OnNumberSelected"/>
+        <Button Style="{StaticResource numpad}" Grid.Row="3" Grid.Column="2" Text="9" Clicked="OnNumberSelected"/>
+        <Button Style="{StaticResource operator}" Grid.Row="3" Grid.Column="3" Text="*" Clicked="OnOperatorSelected"/>
+
+        <Button Style="{StaticResource numpad}" Grid.Row="4" Grid.Column="0" Text="4" Clicked="OnNumberSelected"/>
+        <Button Style="{StaticResource numpad}" Grid.Row="4" Grid.Column="1" Text="5" Clicked="OnNumberSelected"/>
+        <Button Style="{StaticResource numpad}" Grid.Row="4" Grid.Column="2" Text="6" Clicked="OnNumberSelected"/>
+        <Button Style="{StaticResource operator}" Grid.Row="4" Grid.Column="3" Text="-" Clicked="OnOperatorSelected"/>
+
+        <Button Style="{StaticResource numpad}" Grid.Row="5" Grid.Column="0" Text="1" Clicked="OnNumberSelected"/>
+        <Button Style="{StaticResource numpad}" Grid.Row="5" Grid.Column="1" Text="2" Clicked="OnNumberSelected"/>
+        <Button Style="{StaticResource numpad}" Grid.Row="5" Grid.Column="2" Text="3" Clicked="OnNumberSelected"/>
+        <Button Style="{StaticResource operator}" Grid.Row="5" Grid.Column="3" Text="+" Clicked="OnOperatorSelected"/>
+
+        <Button Style="{StaticResource operator}" Grid.Row="6" Grid.Column="0" Text="±" Clicked="OnOperatorSelected"/>
+        <Button Style="{StaticResource numpad}" Grid.Row="6" Grid.Column="1" Text="0" Clicked="OnNumberSelected"/>
+        <Button Style="{StaticResource operator}" Grid.Row="6" Grid.Column="2" Text="," Clicked="OnOperatorSelected"/>
+        <Button Style="{StaticResource operator}" Grid.Row="6" Grid.Column="3" Text="=" Clicked="OnOperatorSelected"/>
+    </Grid>
+
+</ContentPage>
