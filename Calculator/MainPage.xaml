@@ -80,9 +80,9 @@
         <Button Style="{StaticResource numpad}" Grid.Row="5" Grid.Column="2" Text="3" Clicked="OnNumberSelected"/>
         <Button Style="{StaticResource operator}" Grid.Row="5" Grid.Column="3" Text="+" Clicked="OnOperatorSelected"/>
 
-        <Button Style="{StaticResource operator}" Grid.Row="6" Grid.Column="0" Text="±" Clicked="OnOperatorSelected"/>
+        <Button Style="{StaticResource operator}" Grid.Row="6" Grid.Column="0" Text="±" Clicked="OnChangeSign"/>
         <Button Style="{StaticResource numpad}" Grid.Row="6" Grid.Column="1" Text="0" Clicked="OnNumberSelected"/>
-        <Button Style="{StaticResource operator}" Grid.Row="6" Grid.Column="2" Text="," Clicked="OnOperatorSelected"/>
+        <Button Style="{StaticResource operator}" Grid.Row="6" Grid.Column="2" Text="," Clicked="OnNumberSelected"/>
         <Button Style="{StaticResource operator}" Grid.Row="6" Grid.Column="3" Text="=" Clicked="OnCalculateSolution"/>
     </Grid>
 

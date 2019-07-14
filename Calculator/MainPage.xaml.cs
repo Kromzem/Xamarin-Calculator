@@ -15,11 +15,24 @@ namespace Calculator
 	public partial class MainPage : ContentPage
 	{
 		private string Result { get => result.Text; set => result.Text = value; }
-		private string Input { get => input.Text; set => input.Text = value; }
+		private string Input
+		{
+			get
+			{
+				return input.Text.Replace("-", "");
+			}
+			set
+			{
+				input.Text = (negativeSign ? "-" : "") + value;
+			}
+		}
+
+		private bool CommaUsed { get => Input.Contains(","); }
 
 		private List<string> calculation = new List<string>();
 
 		private bool inputIsSolution;
+		private bool negativeSign;
 
 		public MainPage()
 		{
@@ -28,12 +41,24 @@ namespace Calculator
 
 		public void OnNumberSelected(object sender, EventArgs args)
 		{
-			if(Input.Equals("0") || inputIsSolution)
+			var number = ((Button)sender).Text;
+
+			if (Input.Equals("0") || inputIsSolution)
 			{
 				Input = "";
 			}
 
-			Input += ((Button)sender).Text;
+			if (number.Equals(","))
+			{
+				if (CommaUsed) return;
+
+				if (Input.Length <= 0)
+				{
+					Input = "0";
+				}
+			}
+
+			Input += number;
 
 			inputIsSolution = false;
 		}
@@ -42,13 +67,20 @@ namespace Calculator
 		{
 			var selectedOperator = ((Button)sender).Text;
 
-			calculation.Add(Input);
+			calculation.Add((negativeSign ? "-" : "") + Input);
 			calculation.Add(selectedOperator);
 
 			Result += Input + selectedOperator;
 			Input = "0";
 
 			inputIsSolution = false;
+		}
+
+		public void OnChangeSign(object sender, EventArgs args)
+		{
+			negativeSign = !negativeSign;
+
+			Input = Input;
 		}
 
 		public void OnClearComplete(object sender, EventArgs args)
@@ -64,8 +96,10 @@ namespace Calculator
 
 		public void OnDelete(object sender, EventArgs args)
 		{
-			if(!Input.Equals("0"))
+			if (!Input.Equals("0"))
 			{
+				var removedChar = Input.Last();
+
 				Input = Input.Remove(Input.Length - 1);
 
 				if (Input.Length <= 0)
@@ -73,10 +107,13 @@ namespace Calculator
 					Input = "0";
 				}
 			}
-			else if(calculation.Count > 0)
+			else if (calculation.Count > 0)
 			{
 				RemoveLastCalculationElement();
-				Input = RemoveLastCalculationElement();
+
+				var removedElement = RemoveLastCalculationElement();
+				negativeSign = removedElement.Contains("-");
+				Input = removedElement.Replace("-", "");
 			}
 		}
 
@@ -104,19 +141,21 @@ namespace Calculator
 			{
 				var element = calculation[i];
 
-				if(element.Equals("+"))
+				if (element.Equals("+"))
 				{
 					CalculateAtIndex(i, (first, second) => first + second);
 					i--;
 				}
-				else if(element.Equals("-"))
+				else if (element.Equals("-"))
 				{
 					CalculateAtIndex(i, (first, second) => first - second);
 					i--;
 				}
 			}
+			var calcResult = calculation[0].Replace(".", ",");
+			negativeSign = calcResult.StartsWith("-");
+			Input = calcResult.Replace("-", "");
 
-			Input = calculation[0];
 			Result = "";
 
 			calculation.Clear();
@@ -126,8 +165,8 @@ namespace Calculator
 
 		private void CalculateAtIndex(int operatorIndex, Func<double, double, double> calculationLogic)
 		{
-			var first = Convert.ToDouble(calculation[operatorIndex - 1]);
-			var second = Convert.ToDouble(calculation[operatorIndex + 1]);
+			var first = Convert.ToDouble(calculation[operatorIndex - 1].Replace(",", "."));
+			var second = Convert.ToDouble(calculation[operatorIndex + 1].Replace(",", "."));
 
 			calculation.RemoveAt(operatorIndex - 1);
 			calculation.RemoveAt(operatorIndex - 1);
