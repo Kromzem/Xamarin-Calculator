@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,22 +18,16 @@ namespace Calculator
 		private string Result { get => result.Text; set => result.Text = value; }
 		private string Input
 		{
-			get
-			{
-				return input.Text.Replace("-", "");
-			}
-			set
-			{
-				input.Text = (negativeSign ? "-" : "") + value;
-			}
+			get => input.Text.Replace("-", "");
+			set => input.Text = (_negativeSign ? "-" : "") + value;
 		}
 
-		private bool CommaUsed { get => Input.Contains(","); }
+		private bool CommaUsed => Input.Contains(",");
 
-		private List<string> calculation = new List<string>();
+		private readonly List<string> _calculation = new List<string>();
 
-		private bool inputIsSolution;
-		private bool negativeSign;
+		private bool _inputIsSolution;
+		private bool _negativeSign;
 
 		public MainPage()
 		{
@@ -43,7 +38,7 @@ namespace Calculator
 		{
 			var number = ((Button)sender).Text;
 
-			if (Input.Equals("0") || inputIsSolution)
+			if (Input.Equals("0") || _inputIsSolution)
 			{
 				Input = "";
 			}
@@ -60,37 +55,44 @@ namespace Calculator
 
 			Input += number;
 
-			inputIsSolution = false;
+			_inputIsSolution = false;
 		}
 
 		public void OnOperatorSelected(object sender, EventArgs args)
 		{
 			var selectedOperator = ((Button)sender).Text;
+			var inputText = (_negativeSign ? "-" : "") + Input;
 
-			calculation.Add((negativeSign ? "-" : "") + Input);
-			calculation.Add(selectedOperator);
+			_negativeSign = false;
 
-			Result += Input + selectedOperator;
+			_calculation.Add(inputText);
+			_calculation.Add(selectedOperator);
+
+			Result += inputText + selectedOperator;
 			Input = "0";
 
-			inputIsSolution = false;
+			_inputIsSolution = false;
 		}
 
 		public void OnChangeSign(object sender, EventArgs args)
 		{
-			negativeSign = !negativeSign;
+			_negativeSign = !_negativeSign;
 
 			Input = Input;
 		}
 
 		public void OnClearComplete(object sender, EventArgs args)
 		{
+			_negativeSign = false;
+
 			Result = "";
 			Input = "0";
 		}
 
 		public void OnClearInput(object sender, EventArgs args)
 		{
+			_negativeSign = false;
+
 			Input = "0";
 		}
 
@@ -98,8 +100,6 @@ namespace Calculator
 		{
 			if (!Input.Equals("0"))
 			{
-				var removedChar = Input.Last();
-
 				Input = Input.Remove(Input.Length - 1);
 
 				if (Input.Length <= 0)
@@ -107,23 +107,23 @@ namespace Calculator
 					Input = "0";
 				}
 			}
-			else if (calculation.Count > 0)
+			else if (_calculation.Count > 0)
 			{
 				RemoveLastCalculationElement();
 
 				var removedElement = RemoveLastCalculationElement();
-				negativeSign = removedElement.Contains("-");
+				_negativeSign = removedElement.Contains("-");
 				Input = removedElement.Replace("-", "");
 			}
 		}
 
 		public void OnCalculateSolution(object sender, EventArgs args)
 		{
-			calculation.Add(Input);
+			_calculation.Add(Input);
 
-			for (var i = 0; i < calculation.Count; i++)
+			for (var i = 0; i < _calculation.Count; i++)
 			{
-				var element = calculation[i];
+				var element = _calculation[i];
 
 				if (element.Equals("*"))
 				{
@@ -137,9 +137,9 @@ namespace Calculator
 				}
 			}
 
-			for (var i = 0; i < calculation.Count; i++)
+			for (var i = 0; i < _calculation.Count; i++)
 			{
-				var element = calculation[i];
+				var element = _calculation[i];
 
 				if (element.Equals("+"))
 				{
@@ -152,32 +152,32 @@ namespace Calculator
 					i--;
 				}
 			}
-			var calcResult = calculation[0].Replace(".", ",");
-			negativeSign = calcResult.StartsWith("-");
+			var calcResult = _calculation[0].Replace(".", ",");
+			_negativeSign = calcResult.StartsWith("-");
 			Input = calcResult.Replace("-", "");
 
 			Result = "";
 
-			calculation.Clear();
+			_calculation.Clear();
 
-			inputIsSolution = true;
+			_inputIsSolution = true;
 		}
 
 		private void CalculateAtIndex(int operatorIndex, Func<double, double, double> calculationLogic)
 		{
-			var first = Convert.ToDouble(calculation[operatorIndex - 1].Replace(",", "."));
-			var second = Convert.ToDouble(calculation[operatorIndex + 1].Replace(",", "."));
+			var first = Convert.ToDouble(_calculation[operatorIndex - 1].Replace(",", "."), CultureInfo.InvariantCulture);
+			var second = Convert.ToDouble(_calculation[operatorIndex + 1].Replace(",", "."), CultureInfo.InvariantCulture);
 
-			calculation.RemoveAt(operatorIndex - 1);
-			calculation.RemoveAt(operatorIndex - 1);
-			calculation.RemoveAt(operatorIndex - 1);
+			_calculation.RemoveAt(operatorIndex - 1);
+			_calculation.RemoveAt(operatorIndex - 1);
+			_calculation.RemoveAt(operatorIndex - 1);
 
-			calculation.Insert(operatorIndex - 1, Convert.ToString(calculationLogic(first, second)));
+			_calculation.Insert(operatorIndex - 1, Convert.ToString(calculationLogic(first, second), CultureInfo.InvariantCulture));
 		}
 
 		private string RemoveLastCalculationElement()
 		{
-			var element = calculation.RemoveLast();
+			var element = _calculation.RemoveLast();
 
 			Result = Result.Remove(Result.Length - element.Length);
 
